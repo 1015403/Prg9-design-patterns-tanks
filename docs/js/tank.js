@@ -1,4 +1,5 @@
 import { Bullet } from "./projectiles/bullet.js";
+import { BulletW } from "./weapons/bulletW.js";
 import { GameObject } from "./gameobject.js";
 import { Turret } from "./turret.js";
 import { Vector } from "./vector.js";
@@ -7,8 +8,8 @@ export class Tank extends GameObject {
     get Turret() { return this.turret; }
     constructor(game) {
         super("tank-body");
-        this.FRICTION = 0.3;
-        this.ACCELERATION = 0.2;
+        this.FRICTION = 0.2;
+        this.ACCELERATION = 0.1;
         this.turnLeft = false;
         this.turnRight = false;
         this.accelerate = false;
@@ -23,6 +24,7 @@ export class Tank extends GameObject {
         this.speed = new Vector(0, 0);
         this.rotation = 0;
         this.turret = new Turret(this);
+        this.weapon = new BulletW(this);
         window.addEventListener("keydown", (e) => this.handleKeyDown(e));
         window.addEventListener("keyup", (e) => this.handleKeyUp(e));
     }
@@ -33,9 +35,9 @@ export class Tank extends GameObject {
         else if (this.turnRight)
             this.rotation += this.rotationSpeed;
         if (this.accelerate) {
-            if (this.speed.x < 5)
+            if (this.speed.x < 3)
                 this.speed.x += this.ACCELERATION;
-            if (this.speed.y < 5)
+            if (this.speed.y < 3)
                 this.speed.y += this.ACCELERATION;
         }
         else {
@@ -82,6 +84,9 @@ export class Tank extends GameObject {
         }
     }
     onCollision(target) {
+    }
+    setWeapon(weapon) {
+        this.weapon = weapon;
     }
     keepInWindow() {
         if (this.position.x + this.width < 0)
